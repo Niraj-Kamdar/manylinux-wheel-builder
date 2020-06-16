@@ -17,4 +17,4 @@ for file in os.listdir("dist"):
 
 
 logging.info("Uploading built binary to PyPI")
-subprocess.call(["twine", "upload", "wheelhouse/*"])
+subprocess.call(["/opt/python/cp37-cp37m/bin/python", "-m", "twine", "upload", "wheelhouse/*"])
