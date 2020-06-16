@@ -1,0 +1,6 @@
+# action.yml
+name: 'Manywheel builder'
+description: 'creates manywheel'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
