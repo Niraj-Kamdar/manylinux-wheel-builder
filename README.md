@@ -1,5 +1,5 @@
 # Manylinux-wheel-builder
-This action builds manylinux wheels for several recent versions of Python (3.6 - 3.9) and publishes to pypi. It uses docker environment provided by pypa's [manylinux](https://github.com/pypa/manylinux) project. We are using [manylinux2010_x86_64 docker](https://quay.io/repository/pypa/manylinux2010_x86_64) container which requires `pip >= 19.0` on the client installing the built wheel.
+This action builds manylinux wheels for several recent versions of Python (3.6 - 3.9) and publishes to pypi. It uses docker environment provided by pypa's [manylinux](https://github.com/pypa/manylinux) project. I am using [manylinux2010_x86_64 docker](https://quay.io/repository/pypa/manylinux2010_x86_64) container which requires `pip >= 19.0` on the client installing the built wheel.
 
 ## Basic Usage
 If only want to build and publish wheels for linux platform then below CD action will be enough. It will only build and publish package if pushed commit contains a version tag because this seems the most appropriate in this case but you can change it if you want.
@@ -59,3 +59,5 @@ Building manylinux-compatible wheels is not trivial; as a general rule, binaries
 
 Pypa's manylinux has mentioned that - "The manylinux2010 tags allow projects to distribute wheels that are automatically installed (and work!) on the vast majority of desktop and server Linux distributions."
 
+## Contributions
+If you find any bugs or have any idea to improve this action please file an issue. You are also welcome to improve project documentation.
