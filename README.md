@@ -20,6 +20,8 @@ jobs:
       - name: build and upload manylinux wheels
         uses:  Niraj-Kamdar/manylinux-wheel-builder@master
 ```
+The secret used in `${{ secrets.TWINE_USERNAME }}` and `${{ secrets.TWINE_PASSWORD }}` needs to be created on the settings page of your project on GitHub. See [Creating & using secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets).
+>Pro tip: instead of using branch pointers, like master, pin versions of Actions that you use to tagged versions or sha1 commit identifiers. This will make your workflows more secure and better reproducible, saving you from sudden and unpleasant surprises.
 
 ## Advanced Usage
 If you also want to build and publish wheels for windows and macos in adition to linux, you can append above action with following yaml snippet. This relies on [setup-python](https://github.com/actions/setup-python) action.
@@ -49,8 +51,8 @@ Matrix-build:
           twine upload dist/*
         continue-on-error: true
 ```
-Checkout complete CD action I am using for [my project](https://github.com/Niraj-Kamdar/qpt_generator/blob/master/.github/workflows/main.yml).
-## FAQ
+Checkout example CD actions from [/examples](https://github.com/Niraj-Kamdar/manylinux-wheel-builder/tree/master/examples).
+## FAQs
 **1. Why don't I build wheel on ubuntu-latest and publish it directly to the PyPI?**
 
 Building manylinux-compatible wheels is not trivial; as a general rule, binaries built on one Linux distro will only work on other Linux distros that are the same age or newer. Therefore, if we want to make binaries that run on most Linux distros, we have to use manylinux docker images. This is the reason why twine won't upload distro specific built wheel.
@@ -61,3 +63,7 @@ Pypa's manylinux has mentioned that - "The manylinux2010 tags allow projects to 
 
 ## Contributions
 If you find any bugs or have any idea to improve this action please file an issue. You are also welcome to improve project documentation.
+
+## License
+The Dockerfile and associated scripts and documentation in this project are released under the [MIT License](https://github.com/Niraj-Kamdar/manylinux-wheel-builder/blob/master/LICENSE)
+
