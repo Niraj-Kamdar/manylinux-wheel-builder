@@ -1,5 +1,5 @@
 # Manylinux-wheel-builder
-This action builds manylinux wheels for several recent versions of Python (3.6 - 3.9) and publishes to pypi. It uses docker environment provided by pypa's [manylinux](https://github.com/pypa/manylinux) project. I am using [manylinux2010_x86_64 docker](https://quay.io/repository/pypa/manylinux2010_x86_64) container which requires `pip >= 19.0` on the client installing the built wheel.
+This action builds manylinux wheels for several recent versions of Python (3.6 - 3.9) and publishes to pypi. It uses docker image provided by pypa's [manylinux](https://github.com/pypa/manylinux) project. I am using [manylinux2010_x86_64 docker](https://quay.io/repository/pypa/manylinux2010_x86_64) image which requires `pip >= 19.0` on the client installing the built wheel.
 
 ## Basic Usage
 If only want to build and publish wheels for linux platform then below CD action will be enough. It will only build and publish package if pushed commit contains a version tag because this seems the most appropriate in this case but you can change it if you want.
@@ -53,7 +53,7 @@ Checkout complete CD action I am using for [my project](https://github.com/Niraj
 ## FAQ
 **1. Why don't I build wheel on ubuntu-latest and publish it directly to the PyPI?**
 
-Building manylinux-compatible wheels is not trivial; as a general rule, binaries built on one Linux distro will only work on other Linux distros that are the same age or newer. Therefore, if we want to make binaries that run on most Linux distros, we have to use a very old distro -- CentOS 6.
+Building manylinux-compatible wheels is not trivial; as a general rule, binaries built on one Linux distro will only work on other Linux distros that are the same age or newer. Therefore, if we want to make binaries that run on most Linux distros, we have to use manylinux docker images. This is the reason why twine won't upload distro specific built wheel.
 
 **2. Why did I choose manylinux2010?**
 
