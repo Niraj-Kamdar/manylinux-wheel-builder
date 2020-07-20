@@ -1,6 +1,9 @@
 # action.yml
 name: 'Manylinux wheel builder'
 description: 'Builds wheels for various versions of python and deploys them to PyPI.'
+branding:
+  color: blue
+  icon: upload-cloud
 inputs:
   python-versions:
     # Possible Values: "3.6, 3.7", "3.*", etc.
