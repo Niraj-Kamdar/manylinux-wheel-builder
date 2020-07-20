@@ -1,0 +1,8 @@
+title: Manylinux-wheel-builder
+description: This action builds manylinux wheels for several recent versions of Python (3.6 - 3.9) and publishes to pypi. It uses docker environment provided by pypa's manylinux project. We are using manylinux2010_x86_64 docker container which requires pip >= 19.0 on the client installing the built wheel.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
