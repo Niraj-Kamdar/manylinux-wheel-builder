@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Manylinux-wheel-builder by Niraj-Kamdar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Manylinux-wheel-builder</h1>
+      <h2 class="project-tagline">This action builds manylinux wheels for several recent versions of Python (3.6 - 3.9) and publishes to pypi. It uses docker environment provided by pypa&#39;s manylinux project. We are using manylinux2010_x86_64 docker container which requires pip &gt;= 19.0 on the client installing the built wheel.</h2>
+      <a href="https://github.com/Niraj-Kamdar/manylinux-wheel-builder" class="btn">View on GitHub</a>
+      <a href="https://github.com/Niraj-Kamdar/manylinux-wheel-builder/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/Niraj-Kamdar/manylinux-wheel-builder/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="manylinux-wheel-builder" class="anchor" href="#manylinux-wheel-builder" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Manylinux-wheel-builder</h1>
+<h2>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Basic Usage</h2>
+<p>If only want to build and publish wheels for linux platform then below CD action will be enough. It will only build and publish package if pushed commit contains a version tag because this seems the most appropriate in this case but you can change it if you want.</p>
+<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">name</span>: <span class="pl-s">pypi deployer</span>
+<span class="pl-ent">on</span>:
+  <span class="pl-ent">push</span>:
+    <span class="pl-ent">tags</span>:
+      - <span class="pl-s"><span class="pl-pds">'</span>v*<span class="pl-pds">'</span></span> <span class="pl-c"><span class="pl-c">#</span> Push events to matching v*, i.e. v1.0, v20.15.10</span>
+<span class="pl-ent">jobs</span>:
+  <span class="pl-ent">Linux-build</span>:
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">ubuntu-latest</span>
+    <span class="pl-ent">env</span>:
+      <span class="pl-ent">TWINE_USERNAME</span>: <span class="pl-s">${{ secrets.TWINE_USERNAME }}</span>
+      <span class="pl-ent">TWINE_PASSWORD</span>: <span class="pl-s">${{ secrets.TWINE_PASSWORD }}</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v2</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">build and upload manylinux wheels</span>
+        <span class="pl-ent">uses</span>:  <span class="pl-s">Niraj-Kamdar/manylinux-wheel-builder@master</span></pre></div>
+<h2>
+<a id="advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advanced Usage</h2>
+<p>If you also want to build and publish wheels for windows and macos in adition to linux, you can append above action with following yaml snippet. This relies on <a href="https://github.com/actions/setup-python">setup-python</a> action.</p>
+<div class="highlight highlight-source-yaml"><pre><span class="pl-ent">Matrix-build</span>:
+    <span class="pl-ent">runs-on</span>: <span class="pl-s">${{ matrix.os }}</span>
+    <span class="pl-ent">env</span>:
+      <span class="pl-ent">TWINE_USERNAME</span>: <span class="pl-s">${{ secrets.TWINE_USERNAME }}</span>
+      <span class="pl-ent">TWINE_PASSWORD</span>: <span class="pl-s">${{ secrets.TWINE_PASSWORD }}</span>
+    <span class="pl-ent">strategy</span>:
+      <span class="pl-ent">matrix</span>:
+        <span class="pl-ent">os</span>: <span class="pl-s">[macos-latest, windows-latest]</span>
+        <span class="pl-ent">python-version</span>: <span class="pl-s">[3.6, 3.7, 3.8]</span>
+    <span class="pl-ent">steps</span>:
+      - <span class="pl-ent">uses</span>: <span class="pl-s">actions/checkout@v2</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">Set up Python</span>
+        <span class="pl-ent">uses</span>: <span class="pl-s">actions/setup-python@v2</span>
+        <span class="pl-ent">with</span>:
+          <span class="pl-ent">python-version</span>: <span class="pl-s">${{ matrix.python-version }}</span>
+      - <span class="pl-ent">name</span>: <span class="pl-s">build wheel</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">|</span>
+<span class="pl-s">          pip install wheel</span>
+<span class="pl-s">          python setup.py bdist_wheel</span>
+<span class="pl-s"></span>      - <span class="pl-ent">name</span>: <span class="pl-s">upload wheel</span>
+        <span class="pl-ent">run</span>: <span class="pl-s">|</span>
+<span class="pl-s">          pip install twine</span>
+<span class="pl-s">          twine upload dist/*</span>
+<span class="pl-s"></span>        <span class="pl-ent">continue-on-error</span>: <span class="pl-c1">true</span></pre></div>
+<p>Checkout complete CD action I am using for <a href="https://github.com/Niraj-Kamdar/qpt_generator/blob/master/.github/workflows/main.yml">my project</a>.</p>
+<h2>
+<a id="faq" class="anchor" href="#faq" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FAQ</h2>
+<p><strong>1. Why don't I build wheel on ubuntu-latest and publish it directly to the PyPI?</strong></p>
+<p>Building manylinux-compatible wheels is not trivial; as a general rule, binaries built on one Linux distro will only work on other Linux distros that are the same age or newer. Therefore, if we want to make binaries that run on most Linux distros, we have to use a very old distro -- CentOS 6.</p>
+<p><strong>2. Why did I choose manylinux2010?</strong></p>
+<p>Pypa's manylinux has mentioned that - "The manylinux2010 tags allow projects to distribute wheels that are automatically installed (and work!) on the vast majority of desktop and server Linux distributions."</p>
+<h2>
+<a id="contributions" class="anchor" href="#contributions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributions</h2>
+<p>If you find any bugs or have any idea to improve this action please file an issue. You are also welcome to improve project documentation.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Niraj-Kamdar/manylinux-wheel-builder">Manylinux-wheel-builder</a> is maintained by <a href="https://github.com/Niraj-Kamdar">Niraj-Kamdar</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
