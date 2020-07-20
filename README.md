@@ -49,8 +49,8 @@ Matrix-build:
           twine upload dist/*
         continue-on-error: true
 ```
-Checkout complete CD action I am using for [my project](https://github.com/Niraj-Kamdar/qpt_generator/blob/master/.github/workflows/main.yml).
-## FAQ
+Checkout example CD actions from [/examples](https://github.com/Niraj-Kamdar/manylinux-wheel-builder/tree/master/examples).
+## FAQs
 **1. Why don't I build wheel on ubuntu-latest and publish it directly to the PyPI?**
 
 Building manylinux-compatible wheels is not trivial; as a general rule, binaries built on one Linux distro will only work on other Linux distros that are the same age or newer. Therefore, if we want to make binaries that run on most Linux distros, we have to use manylinux docker images. This is the reason why twine won't upload distro specific built wheel.
