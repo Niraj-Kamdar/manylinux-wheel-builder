@@ -1,6 +1,15 @@
 # action.yml
-name: 'Manywheel builder'
-description: 'creates manywheel'
+name: 'Manylinux wheel builder'
+description: 'Builds wheels for various versions of python and deploys them to PyPI.'
+inputs:
+  python-versions:
+    # Possible Values: "3.6, 3.7", "3.*", etc.
+    description: 'Specify python versions for which you want to build wheels (default: 3.*)'
+    required: true
+    default: '3.*'
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.python-versions }}
+
