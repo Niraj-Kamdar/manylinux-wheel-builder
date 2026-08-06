@@ -1,5 +1,7 @@
 # Manylinux-wheel-builder
 
+WARNING: THIS REPO IS NO LONGER BEING MAINTAINED AND SHOULDN'T BE USED FOR ANY NEW PROJECTS!
+
 This action builds manylinux wheels for several recent versions of Python (3.6 -
 3.9) and publishes to pypi. It uses docker image provided by pypa's
 [manylinux](https://github.com/pypa/manylinux) project. I am using
